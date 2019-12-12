@@ -14,7 +14,7 @@ try:
 except:
     pass
 
-OptionList = ["IBM", "Microsoft"]
+OptionList = ['', "IBM", "Microsoft"]
 
 
 class main(tk.Tk):
@@ -68,7 +68,7 @@ class homepage(tk.Frame):
         account_button = ttk.Button(self, text="Account details", padding=10)
 
         # ----Grid----#
-        services_select.grid(row=1, column=0, padx=10, pady=10, sticky="NSEW")
+        services_select.grid(row=1, column=0)
         text.grid(row=0, column=0,padx=20,pady=5, sticky="NSEW")
         delete_from_server.grid(row=1, column=3, columnspan=1, padx=30, pady=30, sticky="NSEW")
         start_analysis.grid(row=0, column=3, columnspan=1, sticky="NSEW", padx=0, pady=0)
