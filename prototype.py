@@ -21,7 +21,7 @@ class main(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         # self.resizable(False, False)
 
-        self.geometry("600x300")
+        self.geometry("800x300")
         self.title("Transcription service")
         self.title_font = tkfont.Font(family='Helvetica', size=15, weight="bold")
 
@@ -113,7 +113,7 @@ class results(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        df = pd.read_csv(r'/Users/alighariani/Documents/UCL/2nd/Systems_engineering/python_prototype/data.csv')
+        df = pd.read_csv(r'./data.csv')
         print(df)
         self.createtable()
         self.filletable(df)
