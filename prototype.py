@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter.ttk import Treeview
+from pathlib import Path
 
 from PIL import ImageTk, Image
 from tkinter import filedialog
@@ -72,7 +73,7 @@ class homepage(tk.Frame):
         delete_from_server.grid(row=1, column=3, columnspan=1, padx=30, pady=30, sticky="NSEW")
         start_analysis.grid(row=0, column=3, columnspan=1, sticky="NSEW", padx=0, pady=0)
         upload_button.grid(row=2, column=0, sticky="NSEW", padx=5, pady=5)
-        file_display.grid(row=2, column=2, sticky="NSEW", padx=50, pady=20)
+        file_display.grid(row=2, column=2, sticky="W", padx=0, pady=0)
         account_button.grid(row=3, column=1, columnspan=2,padx=30,pady=20, sticky="NSEW")
 
         # ---Configuration---#
@@ -82,8 +83,8 @@ class homepage(tk.Frame):
     def Upload(self, event=None):
         try:
             filename = filedialog.askopenfile().name
-            print('Selected:', filename)
-            self.file_selected.set(filename)
+            print('Selected:', Path(filename).name)
+            self.file_selected.set(Path(filename).name)
         except ValueError:
             pass
 
