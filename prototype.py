@@ -22,7 +22,7 @@ class main(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         # self.resizable(False, False)
 
-        self.geometry("600x300")
+        #self.geometry("600x300")
         self.title("Transcription service")
         self.title_font = tkfont.Font(family='Helvetica', size=15, weight="bold")
 
@@ -50,6 +50,7 @@ class homepage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        frame = ttk.Frame(self, width="600", height="300")
 
         # -----Variables---#
 
@@ -59,22 +60,23 @@ class homepage(tk.Frame):
 
         # ----Widgets-----#
 
-        text = ttk.Label(self, text="Choose a service", padding=10)
-        services_select = ttk.OptionMenu(self, services, *OptionList)
-        delete_from_server = tk.Checkbutton(self, text="Erase from server")
-        start_analysis = ttk.Button(self, text="Start Analysis", command=lambda: controller.show_frame("analysis"), padding=10)
-        upload_button = ttk.Button(self, text='Select a file...', command=self.Upload, padding=10)
-        file_display = ttk.Label(self, textvariable=self.file_selected)
-        account_button = ttk.Button(self, text="Account details", padding=10)
+        text = ttk.Label(frame, text="Choose a service", padding=10)
+        services_select = ttk.OptionMenu(frame, services, *OptionList)
+        delete_from_server = tk.Checkbutton(frame, text="Erase from server")
+        start_analysis = ttk.Button(frame, text="Start Analysis", command=lambda: controller.show_frame("analysis"), padding=10)
+        upload_button = ttk.Button(frame, text='Select a file...', command=self.Upload, padding=10)
+        file_display = ttk.Label(frame, textvariable=self.file_selected)
+        account_button = ttk.Button(frame, text="Account details", padding=10)
 
         # ----Grid----#
-        services_select.grid(row=1, column=0)
+        services_select.grid(row=1, column=0, padx=20, pady=20)
         text.grid(row=0, column=0,padx=20,pady=5, sticky="NSEW")
         delete_from_server.grid(row=1, column=3, columnspan=1, padx=30, pady=30, sticky="NSEW")
         start_analysis.grid(row=0, column=3, columnspan=1, sticky="NSEW", padx=0, pady=0)
         upload_button.grid(row=2, column=0, sticky="NSEW", padx=5, pady=5)
         file_display.grid(row=2, column=2, sticky="W", padx=0, pady=0)
-        account_button.grid(row=3, column=1, columnspan=2,padx=30,pady=20, sticky="NSEW")
+        account_button.grid(row=3, column=0, columnspan=2,padx=30,pady=20, sticky="NSEW")
+        frame.grid(sticky="NSEW")
 
         # ---Configuration---#
 
@@ -93,21 +95,29 @@ class analysis(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        frame = ttk.Frame(self, width="600", height="300")
+
 
         # ---Widgets---#
 
-        progressionbar = ttk.Progressbar(self, orient="horizontal", length=200, mode="determinate")
-        continue_button = tk.Button(self, text="Continue",command=lambda: controller.show_frame("results"))
+        progressionbar = ttk.Progressbar(frame, orient="horizontal", length=200, mode="determinate")
+        continue_button = tk.Button(frame, text="Continue",command=lambda: controller.show_frame("results"))
 
         # ---Grid---#
 
         progressionbar.grid(row=1, column=3, columnspan=1,padx=200,pady=100, sticky='NSEW')
         continue_button.grid(row=2, column=2, columnspan=2)
+        frame.grid(sticky="NSEW")
+
 
         # ---Configuration---#
 
         progressionbar["maximum"] = 100
         progressionbar["value"] = 100
+
+
+
+
 
 
 class results(tk.Frame):
