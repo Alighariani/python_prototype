@@ -22,7 +22,7 @@ class main(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         # self.resizable(False, False)
 
-        self.geometry("800x300")
+        #self.geometry("600x300")
         self.title("Transcription service")
         self.title_font = tkfont.Font(family='Helvetica', size=15, weight="bold")
 
@@ -41,6 +41,8 @@ class main(tk.Tk):
 
         self.show_frame("homepage")
 
+    
+    
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
@@ -50,6 +52,7 @@ class homepage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        frame = ttk.Frame(self)
 
         # -----Variables---#
 
@@ -59,27 +62,36 @@ class homepage(tk.Frame):
 
         # ----Widgets-----#
 
-        text = ttk.Label(self, text="Choose a service", padding=10)
-        services_select = ttk.OptionMenu(self, services, *OptionList)
-        delete_from_server = tk.Checkbutton(self, text="Erase from server")
-        start_analysis = ttk.Button(self, text="Start Analysis", command=lambda: controller.show_frame("analysis"), padding=10)
-        upload_button = ttk.Button(self, text='Select a file...', command=self.Upload, padding=10)
-        file_display = ttk.Label(self, textvariable=self.file_selected)
-        account_button = ttk.Button(self, text="Account details", padding=10)
+        #username = ttk.Entry(frame)
+        #password = ttk.Entry(frame)
+        text = ttk.Label(frame, text="Choose a service", padding=10)
+        services_select = ttk.OptionMenu(frame, services, *OptionList)
+        delete_from_server = tk.Checkbutton(frame, text="Erase from server")
+        start_analysis = ttk.Button(frame, text="Start Analysis", command=lambda: controller.show_frame("analysis"), padding=10)
+        upload_button = ttk.Button(frame, text='Select a file...', command=self.Upload, padding=10)
+        file_display = ttk.Label(frame, textvariable=self.file_selected)
+        account_button = ttk.Button(frame, text="Account details", padding=10)
 
         # ----Grid----#
-        services_select.grid(row=1, column=0)
+        frame.grid(sticky="NSEW")
+        frame.grid_rowconfigure(0, weight=1)
+        frame.grid_columnconfigure(0, weight=1)
+        services_select.grid(row=1, column=0, padx=20, pady=20)
         text.grid(row=0, column=0,padx=20,pady=5, sticky="NSEW")
-        delete_from_server.grid(row=1, column=3, columnspan=1, padx=30, pady=30, sticky="NSEW")
-        start_analysis.grid(row=0, column=3, columnspan=1, sticky="NSEW", padx=0, pady=0)
+        delete_from_server.grid(row=1, column=3, padx=30, pady=30, sticky="NSEW")
+        start_analysis.grid(row=0, column=3, sticky="NSEW", padx=0, pady=0)
         upload_button.grid(row=2, column=0, sticky="NSEW", padx=5, pady=5)
-        file_display.grid(row=2, column=2, sticky="W", padx=0, pady=0)
-        account_button.grid(row=3, column=1, columnspan=2,padx=30,pady=20, sticky="NSEW")
+        file_display.grid(row=2, column=2, sticky="W")
+        account_button.grid(row=3, column=0, columnspan=2,padx=30,pady=20, sticky="NSEW")
+        #username.grid(row=2, column=3)
+        #password.grid(row=3, column=3)
 
         # ---Configuration---#
 
         text.config(font=("Segoe UI", 15))
 
+    
+    
     def Upload(self, event=None):
         try:
             filename = filedialog.askopenfile().name
@@ -93,16 +105,20 @@ class analysis(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        frame = ttk.Frame(self)
+
 
         # ---Widgets---#
-
-        progressionbar = ttk.Progressbar(self, orient="horizontal", length=200, mode="determinate")
-        continue_button = tk.Button(self, text="Continue",command=lambda: controller.show_frame("results"))
+        text = ttk.Label(frame, text="Analysis Completed!")
+        progressionbar = ttk.Progressbar(frame, orient="horizontal", length=200, mode="determinate")
+        continue_button = tk.Button(frame, text="Continue",command=lambda: controller.show_frame("results"))
 
         # ---Grid---#
-
+        text.grid(row=0,column=3)
         progressionbar.grid(row=1, column=3, columnspan=1,padx=200,pady=100, sticky='NSEW')
         continue_button.grid(row=2, column=2, columnspan=2)
+        frame.grid(sticky="NSEW")
+
 
         # ---Configuration---#
 
@@ -110,27 +126,36 @@ class analysis(tk.Frame):
         progressionbar["value"] = 100
 
 
+
+
 class results(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        df = pd.read_csv(r'./data.csv')
-        print(df)
+        frame = ttk.Frame(self)
+        df = pd.read_csv('data.csv')
+
+        #---Widgets---#
         self.createtable()
         self.filletable(df)
-        delete_file = tk.Button(self, text="Delete file")
-        save_as = tk.Button(self, text="Save as...")
-        analyse = tk.Button(self, text="Analyse")
-        return_to_home = tk.Button(self, text="Return to home", command=lambda: controller.show_frame("homepage"))
-        delete_file.grid(row=1,column=0)
-        save_as.grid(row=2)
-        analyse.grid()
-        return_to_home.grid()
+        delete_file = tk.Button(frame, text="Delete file", padx=5, pady=5)
+        save_as = tk.Button(frame, text="Save as...", padx=5, pady=5)
+        analyse = tk.Button(frame, text="Analyse", padx=5, pady=5)
+        return_to_home = tk.Button(frame, text="Return to home", command=lambda: controller.show_frame("homepage"), padx=5, pady=5)
+
+        #---Grid---#
         self.grid(sticky="NSEW")
+        frame.grid(sticky="NSEW",)
+        delete_file.grid(row=0,column=6,columnspan=2)
+        save_as.grid(row=0, column=4, columnspan=2)
+        analyse.grid(row=0, column=2, columnspan=2)
+        return_to_home.grid(row=0, column=8, columnspan=2)
+        
+
+        #---Configuration--#
         parent.grid_rowconfigure(0, weight=1)
         parent.grid_columnconfigure(0, weight=1)
-        # text = ttk.Label(self, text="test")
-        # text.pack()
+
     def createtable(self):
         tv = Treeview(self)
         tv['columns'] = ('timefrom', 'timeto', 'timebetween', 'membertalking')
@@ -146,6 +171,8 @@ class results(tk.Frame):
         tv.column('membertalking', anchor='center', width=100)
         self.treeview = tv
         tv.grid(sticky="NSWE")
+
+
     def filletable(self, df):
         i = 0
         while(i < 8):
@@ -157,6 +184,5 @@ class results(tk.Frame):
 
 if __name__ == "__main__":
     root = main()
-    root.resizable(width=False, height=False)
+    root.resizable()
     root.mainloop()
-
