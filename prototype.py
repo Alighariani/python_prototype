@@ -3,6 +3,9 @@ from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter.ttk import Treeview
 from pathlib import Path
+import IBM_STT
+from tkinter import messagebox
+from tkinter import *
 
 from PIL import ImageTk, Image
 from tkinter import filedialog
@@ -33,7 +36,7 @@ class main(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (homepage, analysis, results):
+        for F in (homepage, analysing, analysis, results):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -64,10 +67,12 @@ class homepage(tk.Frame):
 
         #username = ttk.Entry(frame)
         #password = ttk.Entry(frame)
+        services = StringVar(frame)
+        services.set("IBM")
         text = ttk.Label(frame, text="Choose a service", padding=10)
         services_select = ttk.OptionMenu(frame, services, *OptionList)
         delete_from_server = tk.Checkbutton(frame, text="Erase from server")
-        start_analysis = ttk.Button(frame, text="Start Analysis", command=lambda: controller.show_frame("analysis"), padding=10)
+        start_analysis = ttk.Button(frame, text="Start Analysis", command=lambda: startAnalysis(self, self.file_selected, services.get()), padding=10)
         upload_button = ttk.Button(frame, text='Select a file...', command=self.Upload, padding=10)
         file_display = ttk.Label(frame, textvariable=self.file_selected)
         account_button = ttk.Button(frame, text="Account details", padding=10)
@@ -90,7 +95,19 @@ class homepage(tk.Frame):
 
         text.config(font=("Segoe UI", 15))
 
-    
+        def startAnalysis(self, file, service):
+            if file.get() != "No file selected...":
+                self.controller.show_frame(analysing)
+                if service == "IBM":
+                    IBM_STT.IBM_STT(str(Path(file)))
+                elif service == "Microsoft":
+                    tk.messagebox.showinfo(title="Info", message="We are still working on this service.")
+                else:
+                    tk.messagebox.showinfo(title="Missing service", message="No chosen service")
+                    return
+                self.controller.show_frame(analysis)
+            else:
+                tk.messagebox.showerror(title="Missing file", message="No file to transcribe.")
     
     def Upload(self, event=None):
         try:
@@ -98,8 +115,17 @@ class homepage(tk.Frame):
             print('Selected:', Path(filename).name)
             self.file_selected.set(Path(filename).name)
         except ValueError:
-            pass
+            tk.messagebox.showerror(title="Uh oh", message="Upload failed.")
 
+class analysing(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        self.controller = controller
+        frame = ttk.Frame(self)
+
+        # --- Widgets ---#
+        text = ttk.Label(frame, text="Analysing")
+        progressionbar = ttk.Progressbar(frame, orient="horizontal", value = 0 ,length=200, mode="determinate")
 
 class analysis(tk.Frame):
     def __init__(self, parent, controller):

@@ -1,3 +1,5 @@
 
 .vscode/*
 IBM_STT/*
+sample*
+__pycache__/*
