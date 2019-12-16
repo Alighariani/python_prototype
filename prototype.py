@@ -97,15 +97,15 @@ class homepage(tk.Frame):
 
         def startAnalysis(self, file, service):
             if file.get() != "No file selected...":
-                self.controller.show_frame(analysing)
+                controller.show_frame("analysing")
                 if service == "IBM":
-                    IBM_STT.IBM_STT(str(Path(file)))
+                    IBM_STT.IBM_STT(str(Path(file.get())))
                 elif service == "Microsoft":
                     tk.messagebox.showinfo(title="Info", message="We are still working on this service.")
                 else:
                     tk.messagebox.showinfo(title="Missing service", message="No chosen service")
                     return
-                self.controller.show_frame(analysis)
+                controller.show_frame("analysis")
             else:
                 tk.messagebox.showerror(title="Missing file", message="No file to transcribe.")
     
@@ -124,7 +124,7 @@ class analysing(tk.Frame):
         frame = ttk.Frame(self)
 
         # --- Widgets ---#
-        text = ttk.Label(frame, text="Analysing")
+        text = ttk.Label(frame, text="Analysing, this might take a minute or two.")
         progressionbar = ttk.Progressbar(frame, orient="horizontal", value = 0 ,length=200, mode="determinate")
 
 class analysis(tk.Frame):
