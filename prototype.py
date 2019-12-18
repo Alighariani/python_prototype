@@ -36,7 +36,7 @@ class main(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (loginpage, homepage, analysing, analysis, results):
+        for F in (loginpage, homepage, analysing, analysis, results, account_details):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -96,7 +96,7 @@ class homepage(tk.Frame):
         start_analysis = ttk.Button(frame, text="Start Analysis", command=lambda: startAnalysis(self, self.file_selected, services.get()), padding=10)
         upload_button = ttk.Button(frame, text='Select a file...', command=self.Upload, padding=10)
         file_display = ttk.Label(frame, textvariable=self.file_selected)
-        account_button = ttk.Button(frame, text="Account details", padding=10)
+        account_button = ttk.Button(frame, text="Account details", command=lambda: controller.show_frame("account_details"), padding=10)
 
         # ----Grid----#
         frame.grid(sticky="NSEW")
@@ -147,6 +147,11 @@ class analysing(tk.Frame):
         # --- Widgets ---#
         text = ttk.Label(frame, text="Analysing, this might take a minute or two.")
         progressionbar = ttk.Progressbar(frame, orient="horizontal", value = 0 ,length=200, mode="determinate")
+
+        #--Grid--#
+
+        text.grid()
+        progressionbar.grid()
 
 class analysis(tk.Frame):
     def __init__(self, parent, controller):
@@ -226,6 +231,17 @@ class results(tk.Frame):
             self.treeview.insert('', 'end', text=i, values=(df['Time From'][i], df['Time To'][i], df['Time Between'][i], df['Member talking'][i]))
             i += 1
 
+class account_details(tk.Frame): 
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        frame = ttk.Frame(self)
+
+        frame.pack()
+        label = ttk.Label(frame, text="Account details, work in progress")
+        return_button = ttk.Button(frame, text="Return to home", command= lambda: controller.show_frame("homepage"))
+        label.pack()
+        return_button.pack()
 
 
 
