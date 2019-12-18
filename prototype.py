@@ -36,19 +36,42 @@ class main(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (homepage, analysing, analysis, results):
+        for F in (loginpage, homepage, analysing, analysis, results):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame("homepage")
+        self.show_frame("loginpage")
 
     
     
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
+
+class loginpage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        frame = ttk.Frame(self)
+
+        #---Widgets---#
+        welcome = ttk.Label(frame, text="Welcome")
+        username = ttk.Label(frame, text="Username", anchor="center")
+        passwd = ttk.Label(frame, text="Password", anchor="center")
+        username_input = ttk.Entry(frame)
+        passwd_input = ttk.Entry(frame)
+        login = ttk.Button(frame, text="Login", command=lambda: controller.show_frame("homepage"))
+
+        #---Grid--#
+        frame.pack()
+        welcome.pack()
+        username.pack()
+        username_input.pack()
+        passwd.pack()
+        passwd_input.pack()
+        login.pack()
 
 
 class homepage(tk.Frame):
@@ -65,8 +88,6 @@ class homepage(tk.Frame):
 
         # ----Widgets-----#
 
-        #username = ttk.Entry(frame)
-        #password = ttk.Entry(frame)
         services = StringVar(frame)
         services.set("IBM")
         text = ttk.Label(frame, text="Choose a service", padding=10)
@@ -154,7 +175,7 @@ class analysis(tk.Frame):
 
 
 
-class results(tk.Frame):
+class results(tk.Frame): 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
