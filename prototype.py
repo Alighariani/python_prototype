@@ -221,10 +221,10 @@ class results(tk.Frame):
         tv.column('timefrom', anchor='center', width=100)
         tv.heading('timeto', text='Time To')
         tv.column('timeto', anchor='center', width=100)
-        tv.heading('Gap', text='Gap between speakers')
-        tv.column('Gap', anchor='center', width=100)
         tv.heading('Speaker', text='Speaker')
         tv.column('Speaker', anchor='center', width=100)
+        tv.heading('Gap', text='Gap between speakers')
+        tv.column('Gap', anchor='center', width=100)
         tv.heading('Confidence', text='Confidence')
         tv.column('Confidence', anchor='center', width=100)
         self.treeview = tv
