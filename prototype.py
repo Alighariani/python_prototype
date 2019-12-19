@@ -6,7 +6,7 @@ from pathlib import Path
 import IBM_STT
 from tkinter import messagebox
 from tkinter import *
-
+import csv
 from PIL import ImageTk, Image
 from tkinter import filedialog
 import pandas as pd
@@ -18,7 +18,6 @@ except:
     pass
 
 OptionList = ['', "IBM", "Microsoft"]
-
 
 class main(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -121,12 +120,12 @@ class homepage(tk.Frame):
                 controller.show_frame("analysing")
                 if service == "IBM":
                     IBM_STT.IBM_STT(str(Path(file.get())))
+                    controller.show_frame("analysis")
                 elif service == "Microsoft":
                     tk.messagebox.showinfo(title="Info", message="We are still working on this service.")
                 else:
                     tk.messagebox.showinfo(title="Missing service", message="No chosen service")
-                    return
-                controller.show_frame("analysis")
+                    return controller.show_frame("analysis")
             else:
                 tk.messagebox.showerror(title="Missing file", message="No file to transcribe.")
     
@@ -135,6 +134,7 @@ class homepage(tk.Frame):
             filename = filedialog.askopenfile().name
             print('Selected:', Path(filename).name)
             self.file_selected.set(Path(filename).name)
+
         except ValueError:
             tk.messagebox.showerror(title="Uh oh", message="Upload failed.")
 
@@ -148,10 +148,13 @@ class analysing(tk.Frame):
         text = ttk.Label(frame, text="Analysing, this might take a minute or two.")
         progressionbar = ttk.Progressbar(frame, orient="horizontal", value = 0 ,length=200, mode="determinate")
 
+
         #--Grid--#
 
-        text.grid()
-        progressionbar.grid()
+        text.pack()
+        progressionbar.pack()
+        frame.pack()
+
 
 class analysis(tk.Frame):
     def __init__(self, parent, controller):
@@ -186,6 +189,7 @@ class results(tk.Frame):
         self.controller = controller
         frame = ttk.Frame(self)
         df = pd.read_csv('data.csv')
+        
 
         #---Widgets---#
         self.createtable()
@@ -210,25 +214,28 @@ class results(tk.Frame):
 
     def createtable(self):
         tv = Treeview(self)
-        tv['columns'] = ('timefrom', 'timeto', 'timebetween', 'membertalking')
+        tv['columns'] = ('timefrom', 'timeto', 'Gap', 'Speaker', 'Confidence')
         tv.heading("#0", text='', anchor='w')
         tv.column("#0", anchor="w")
         tv.heading('timefrom', text='Time From')
         tv.column('timefrom', anchor='center', width=100)
         tv.heading('timeto', text='Time To')
         tv.column('timeto', anchor='center', width=100)
-        tv.heading('timebetween', text='Time Between')
-        tv.column('timebetween', anchor='center', width=100)
-        tv.heading('membertalking', text='Member Talking')
-        tv.column('membertalking', anchor='center', width=100)
+        tv.heading('Gap', text='Gap between speakers')
+        tv.column('Gap', anchor='center', width=100)
+        tv.heading('Speaker', text='Speaker')
+        tv.column('Speaker', anchor='center', width=100)
+        tv.heading('Confidence', text='Confidence')
+        tv.column('Confidence', anchor='center', width=100)
         self.treeview = tv
         tv.grid(sticky="NSWE")
 
 
     def filletable(self, df):
         i = 0
-        while(i < 8):
-            self.treeview.insert('', 'end', text=i, values=(df['Time From'][i], df['Time To'][i], df['Time Between'][i], df['Member talking'][i]))
+        lengths = df.shape
+        while(i < lengths[0]):
+            self.treeview.insert('', 'end', text=i, values=(df['TimeFrom'][i], df['TimeTo'][i], df['Speaker'][i], df['Gap between speakers'][i], df['Confidence'][i]))
             i += 1
 
 class account_details(tk.Frame): 
