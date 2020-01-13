@@ -188,7 +188,7 @@ class results(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         frame = ttk.Frame(self)
-        df = pd.read_csv('sample.csv')
+        df = pd.read_csv('data.csv')
         
 
         #---Widgets---#
